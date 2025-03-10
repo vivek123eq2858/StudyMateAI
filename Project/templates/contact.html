@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Vivek Sharma</title>
+    <style>
+        /* Base styles and variables */
+        :root {
+            --primary-color: #14b8a6; /* Teal */
+            --primary-hover: #0d9488; /* Darker Teal */
+            --secondary-color: #9333ea; /* Purple */
+            --text-color: #e2e8f0; /* Light Gray */
+            --text-muted: #94a3b8; /* Medium Gray */
+            --bg-color: #0f172a; /* Dark Gray */
+            --bg-secondary: #1e293b; /* Slightly Lighter Gray */
+            --border-color: #334155; /* Gray */
+            --card-bg: #1e293b; /* Slightly Lighter Gray */
+            --card-border: #334155; /* Gray */
+            --shadow-color: rgba(0, 0, 0, 0.5); /* Shadow Color */
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .contact-container {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            text-align: center;
+        }
+
+        .contact-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-container p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .contact-icons a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .contact-icons a:hover {
+            color: var(--primary-color); /* Teal */
+            transform: scale(1.2); /* Slightly enlarge the icon on hover */
+        }
+
+        .contact-icons i {
+            font-size: 2.5rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .contact-container h1 {
+                font-size: 2rem;
+            }
+
+            .contact-icons {
+                gap: 20px;
+            }
+
+            .contact-icons i {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="contact-container">
+        <h1>Contact Me</h1>
+        <p>Click on the icons below to get in touch with me!</p>
+        <div class="contact-icons">
+            <a href="tel:9404377683" title="Call Me">
+                <i class="fas fa-phone"></i>
+            </a>
+            <a href="mailto:vasharma749@gmail.com" title="Email Me">
+                <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/vicky-sharma-943a9a293/" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.instagram.com/viveks_02/?next=%2F" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://github.com/vivek123eq2858" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

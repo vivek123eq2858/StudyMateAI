@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology Stack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* General Styling */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0a0a0a, #141414);
+      color: #e2e8f0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      color: #8b5cf6;
+    }
+
+    a {
+      color: #8b5cf6;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Section Styling */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2 i {
+      font-size: 24px;
+    }
+
+    .section p {
+      font-size: 16px;
+      color: #a0aec0;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .tech-card {
+      background: #1a202c;
+      padding: 20px;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .tech-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #8b5cf6;
+    }
+
+    .tech-card p {
+      font-size: 14px;
+      color: #a0aec0;
+    }
+
+    .tech-card ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+      list-style-type: disc;
+    }
+
+    .tech-card ul li {
+      font-size: 14px;
+      color: #a0aec0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #0a0a0a;
+      margin-top: 40px;
+    }
+
+    footer p {
+      font-size: 14px;
+      color: #a0aec0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>Technology Stack</h1>
+      <p>Explore the technologies powering our AI Chat Application.</p>
+    </header>
+
+    <!-- Frontend Technologies -->
+    <div class="section">
+      <h2><i class="fas fa-code"></i> Frontend Technologies</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h3>HTML5</h3>
+          <p>Used for structuring the web page, including the sidebar, chat interface, and file upload section.</p>
+        </div>
+        <div class="tech-card">
+          <h3>CSS3</h3>
+          <p>Responsible for styling the interface, including the dark theme, gradients, and responsive layout.</p>
+        </div>
+        <div class="tech-card">
+          <h3>JavaScript</h3>
+          <p>Handles dynamic interactions, such as file uploads, toggling, and sending/receiving messages.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Marked.js</h3>
+          <p>Parses Markdown content to render AI responses with proper formatting (headings, lists, code blocks).</p>
+        </div>
+        <div class="tech-card">
+          <h3>DOMPurify</h3>
+          <p>Sanitizes HTML content to prevent XSS attacks, ensuring safe rendering of AI responses.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Font Awesome</h3>
+          <p>Provides icons for the UI, such as the ellipsis for dropdown menus.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backend Technologies -->
+    <div class="section">
+      <h2><i class="fas fa-server"></i> Backend Technologies</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h3>Flask</h3>
+          <p>A lightweight Python web framework used for routing, request handling, and response generation.</p>
+        </div>
+        <div class="tech-card">
+          <h3>SQLite3</h3>
+          <p>A lightweight database for storing user information (e.g., email, password).</p>
+        </div>
+        <div class="tech-card">
+          <h3>Pillow (PIL)</h3>
+          <p>Used for image processing, such as handling uploaded images.</p>
+        </div>
+        <div class="tech-card">
+          <h3>pdf2image</h3>
+          <p>Converts PDF files into images for text extraction, relying on Poppler for rendering.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Google Generative AI</h3>
+          <p>Interacts with the Gemini 1.5 API to generate AI responses to user questions.</p>
+        </div>
+        <div class="tech-card">
+          <h3>ZeroBounce API</h3>
+          <p>Validates email addresses during user signup to ensure they are real and deliverable.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Tools -->
+    <div class="section">
+      <h2><i class="fas fa-tools"></i> Additional Tools</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h3>Poppler</h3>
+          <p>A PDF rendering library used by pdf2image to convert PDFs into images.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Microsoft Visual Studio Code</h3>
+          <p>The primary code editor used for developing the application.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Concurrent Futures</h3>
+          <p>Enables parallel processing of tasks, such as extracting text from multiple PDF pages.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Requests</h3>
+          <p>Makes HTTP requests to external APIs, such as ZeroBounce for email validation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 StudyMate AI. All rights reserved.</p>
+  </footer>
+</body>
+</html>

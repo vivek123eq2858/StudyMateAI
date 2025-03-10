@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Chat Interface</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Your existing CSS remains unchanged */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0a0a0a, #141414);
+      color: #e2e8f0;
+      font-family: Arial, sans-serif;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 18rem;
+      min-width: 18rem;
+      max-width: 18rem;
+      padding: 1.5rem;
+      border-right: 1px solid #2d3748;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #8b5cf6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar button {
+      background: linear-gradient(to right, #8b5cf6, #d946ef);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+
+    .sidebar button:hover {
+      background: linear-gradient(to right, #9333ea, #c026d3);
+    }
+
+    .sidebar input[type="file"] {
+      display: none;
+    }
+
+    .file-indicator {
+      margin-top: auto;
+      font-size: 14px;
+      text-align: center;
+      color: #e2e8f0;
+    }
+
+    .upload-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: #0a0a0a;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 70px;
+      background-color: #0a0a0a;
+      padding: 10px 0;
+    }
+
+    .upload-label {
+      font-size: 16px;
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .upload-btn {
+      background: linear-gradient(to right, #8b5cf6, #d946ef);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    .upload-btn:hover {
+      background: linear-gradient(to right, #9333ea, #c026d3);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      left: 50px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #4a5568;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #8b5cf6;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .uploaded-files-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .uploaded-files-list .file-item {
+      background-color: #1a202c;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #a0aec0;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .uploaded-files-list .file-item:hover {
+      background-color: #2d3748;
+    }
+
+    .file-item .file-index {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .file-item .file-actions {
+      position: relative;
+    }
+
+    .file-item .file-actions button {
+      background: none;
+      border: none;
+      color: #e2e8f0;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .file-item .file-actions button:hover {
+      color: #8b5cf6;
+    }
+
+    .file-item .file-actions .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: #0a0a0a;
+      border: 1px solid #2d3748;
+      border-radius: 5px;
+      padding: 5px 0;
+      z-index: 1;
+    }
+
+    .file-item .file-actions .dropdown-menu button {
+      display: block;
+      width: 100%;
+      padding: 8px 16px;
+      text-align: left;
+      background: none;
+      border: none;
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+
+    .file-item .file-actions .dropdown-menu button:hover {
+      background-color: #1a202c;
+    }
+
+    .file-viewer {
+      margin-top: 20px;
+      background-color: #0a0a0a;
+      border-radius: 5px;
+      height: 400px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .file-viewer iframe,
+    .file-viewer img {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      border-radius: 5px;
+      padding: 10px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: linear-gradient(to right, #8b5cf6, #d946ef);
+      color: white;
+      margin-left: auto;
+      text-align: left;
+    }
+
+    .ai {
+      background-color: #1a202c;
+      color: #e2e8f0;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .ai h1, .ai h2, .ai h3 {
+      color: #8b5cf6;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .ai ul {
+      margin: 10px 0 10px 20px;
+    }
+
+    .ai p {
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    .ai pre {
+      background-color: #141414;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      white-space: pre-wrap;
+    }
+
+    .ai code {
+      color: white;
+      font-family: Consolas, monospace;
+    }
+
+    .chat-input {
+      position: sticky;
+      bottom: 0;
+      background-color: #0a0a0a;
+      padding: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input textarea {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #2d3748;
+      font-size: 14px;
+      resize: none;
+      overflow-y: auto;
+      min-height: 40px;
+      max-height: 150px;
+      background-color: #0a0a0a;
+      color: #e2e8f0;
+    }
+
+    .chat-input button {
+      background: linear-gradient(to right, #8b5cf6, #d946ef);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background: linear-gradient(to right, #9333ea, #c026d3);
+    }
+
+    .copy-button {
+      background: none;
+      border: none;
+      color: #8b5cf6;
+      cursor: pointer;
+      margin-left: 10px;
+      position: relative;
+    }
+
+    .copy-button:hover {
+      color: #9333ea;
+    }
+
+    .copy-button.copied::after {
+      content: "Copied!";
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #8b5cf6;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      animation: fadeOut 1.5s ease-in-out;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="toggle-source" checked>
+          <span class="slider round"></span>
+        </label>
+        <span id="toggle-label">Answer from PDF</span>
+      </div>
+      <button onclick="document.getElementById('file-input').click()">📎 Upload PDF/Image</button>
+      <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFileUpload()">
+      <div class="file-indicator" id="file-indicator"></div>
+      <div class="uploaded-files-list" id="uploaded-files-list"></div>
+      <div class="file-viewer" id="file-viewer">
+        <iframe id="pdf-iframe" style="display: none;"></iframe>
+        <img id="image-viewer" style="display: none;">
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input">
+        <textarea id="user-input" placeholder="Ask something... (Enter multiple questions, one per line)"></textarea>
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+<script>
+let fileIndex = 1; // Global counter for file indexing
+let answerFromPDF = true; // Toggle state for answering from PDF or Gemini
+let isBulkMode = false; // Toggle state for single-question or bulk-question mode
+
+// Handle file upload
+function handleFileUpload() {
+  const fileInput = document.getElementById('file-input');
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  document.getElementById('file-indicator').textContent = 'Processing file...';
+
+  fetch('/upload', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+    } else {
+      addFileToList(data.uploaded_file_info.filename);
+      document.getElementById('file-indicator').textContent = 'File processed successfully!';
+    }
+  })
+  .catch(error => {
+    console.error('Error uploading file:', error);
+  });
+}
+
+// Add file to the uploaded files list
+function addFileToList(filename) {
+  const fileItem = document.createElement('div');
+  fileItem.className = 'file-item';
+  fileItem.innerHTML = `
+    <span class="file-index">${fileIndex++}</span>
+    <span>${filename}</span>
+    <div class="file-actions">
+      <button onclick="toggleDropdown(this)"><i class="fas fa-ellipsis-v"></i></button>
+      <div class="dropdown-menu">
+        <button onclick="deleteFile('${filename}')">Delete</button>
+        <button onclick="convertToNotes('${filename}')">Convert into Notes</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('uploaded-files-list').appendChild(fileItem);
+}
+
+// Toggle dropdown menu
+function toggleDropdown(button) {
+  const dropdownMenu = button.nextElementSibling;
+  dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  if (!event.target.matches('.file-actions button')) {
+    const dropdowns = document.querySelectorAll('.dropdown-menu');
+    dropdowns.forEach(dropdown => {
+      dropdown.style.display = 'none';
+    });
+  }
+});
+
+// Delete file
+function deleteFile(filename) {
+  fetch(`/delete/${filename}`, {
+    method: 'DELETE',
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      const fileItems = document.querySelectorAll('.file-item');
+      fileItems.forEach(item => {
+        if (item.querySelector('span:nth-child(2)').textContent === filename) {
+          item.remove();
+        }
+      });
+      alert(`File ${filename} deleted successfully!`);
+    } else {
+      alert(data.error || 'Failed to delete file.');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting file:', error);
+    alert('An error occurred while deleting the file.');
+  });
+}
+
+// Convert file into notes
+function convertToNotes(filename) {
+  fetch('/convert-to-notes', {
+    method: 'POST',
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      const htmlContent = marked.parse(data.notes);
+      displayMessage('ai', htmlContent);
+
+      const downloadButton = document.createElement('button');
+      downloadButton.textContent = 'Download Notes';
+      downloadButton.onclick = () => downloadNotesAsFile(data.notes, 'generated_notes.md');
+      document.getElementById('chat-messages').appendChild(downloadButton);
+    } else {
+      alert(data.error || 'Failed to generate notes.');
+    }
+  })
+  .catch(error => {
+    console.error('Error generating notes:', error);
+    alert('An error occurred while generating notes.');
+  });
+}
+
+// Function to download notes as a file
+function downloadNotesAsFile(notes, filename) {
+  const blob = new Blob([notes], { type: 'text/markdown' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// Display a message in the chat interface
+function displayMessage(role, content, question = null) {
+  const chatMessages = document.getElementById('chat-messages');
+  const sanitizedContent = DOMPurify.sanitize(marked.parse(content)); // Sanitize and parse Markdown
+  const messageElement = document.createElement('div');
+  messageElement.className = `message ${role}`;
+
+  // Include the question in the message if provided
+  if (question) {
+    messageElement.innerHTML = `
+      <div class="question">Question: ${question}</div>
+      <div class="answer">Answer: ${sanitizedContent}</div>
+      <button class="copy-button" data-text="${encodeURIComponent(sanitizedContent)}">Copy</button>
+    `;
+  } else {
+    messageElement.innerHTML = sanitizedContent;
+  }
+
+  chatMessages.appendChild(messageElement);
+
+  // Add event listeners to copy buttons
+  const copyButtons = messageElement.querySelectorAll('.copy-button');
+  copyButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const text = decodeURIComponent(this.getAttribute('data-text'));
+      copyToClipboard(text, this);
+    });
+  });
+
+  // Scroll to the bottom of the chat (already present, kept for consistency)
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Copy to clipboard function
+function copyToClipboard(text, button) {
+  // Decode the URI-encoded text
+  const decodedText = decodeURIComponent(text);
+
+  // Create a temporary element to strip HTML tags
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = decodedText; // Set the HTML content
+  const plainText = tempElement.textContent || tempElement.innerText || ''; // Extract plain text
+
+  navigator.clipboard.writeText(plainText)
+    .then(() => {
+      button.classList.add('copied');
+      setTimeout(() => {
+        button.classList.remove('copied');
+      }, 1500);
+    })
+    .catch((err) => {
+      console.error('Error copying to clipboard:', err);
+      alert('Failed to copy text to clipboard. Please try manually selecting and copying.');
+    });
+}
+
+// Send user message to the backend
+async function sendMessage() {
+  const userInput = document.getElementById('user-input');
+  const questions = userInput.value.trim().split('\n');
+  if (questions.length === 0 || questions[0] === '') return;
+
+  userInput.value = '';
+
+  const questionsText = questions.join('<br>');
+  displayMessage('user', questionsText);
+
+  const endpoint = isBulkMode ? '/ask-bulk' : '/ask';
+  const strict_mode = document.getElementById('toggle-source').checked;
+  const chatMessages = document.getElementById('chat-messages'); // Reference to chat container
+
+  if (isBulkMode) {
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questions: questions, strict_mode: strict_mode }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        displayMessage('ai', `<span style="color: red;">Error: ${data.error}</span>`);
+      } else {
+        const answersText = data.answers.map((a, index) => `
+          <div class="question">Question: ${questions[index]}</div>
+          <div class="answer">Answer: ${a}</div>
+          <button class="copy-button" data-text="${encodeURIComponent(a)}">Copy</button>
+        `).join('<br>');
+        displayMessage('ai', answersText);
+      }
+      // Scroll to bottom after bulk response
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      displayMessage('ai', `<span style="color: red;">Error: ${error.message}</span>`);
+      // Scroll to bottom even on error
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  } else {
+    for (const question of questions) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: question, strict_mode: strict_mode }),
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          displayMessage('ai', `<span style="color: red;">Error: ${data.error}</span>`);
+        } else {
+          displayMessage('ai', data.answer, question);
+        }
+        // Scroll to bottom after each individual response
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } catch (error) {
+        console.error('Error:', error);
+        displayMessage('ai', `<span style="color: red;">Error: ${error.message}</span>`);
+        // Scroll to bottom even on error
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+  }
+}
+
+// Handle "Enter" key press in the input field
+document.getElementById('user-input').addEventListener('keypress', function(event) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
+
+// Toggle between answering from PDF or Gemini
+document.getElementById('toggle-source').addEventListener('change', function(event) {
+  answerFromPDF = event.target.checked;
+  document.getElementById('toggle-label').textContent = answerFromPDF ? 'Answer from PDF' : 'Answer from Gemini';
+});
+
+// Note: The toggle-mode element doesn't exist in your HTML, so this is commented out
+/*
+document.getElementById('toggle-mode').addEventListener('change', function(event) {
+  isBulkMode = event.target.checked;
+  document.getElementById('mode-label').textContent = isBulkMode ? 'Bulk Questions' : 'Single Question';
+});
+*/
+</script
+>
+</body>
+</html>
