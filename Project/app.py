@@ -9,16 +9,16 @@ from PIL import Image
 import traceback
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with your secret key
+app.secret_key = 'your_secret_key' 
 
-# ZeroBounce API configuration
-ZERBOUNCE_API_KEY = 'ba8d8c5a72bf424f9fc5e89446f51ab9'  # Replace with your ZeroBounce API key
+# ZeroBounce API 
+ZERBOUNCE_API_KEY = ''  #  ZeroBounce API key
 ZERBOUNCE_API_URL = 'https://api.zerobounce.net/v2/validate'
 
-# Configure Gemini API
-API_KEY = "AIzaSyAim8oY5QmsjBSzEXngXJTbg6S9PjPGJc8"  # Replace with your actual Gemini API key
+#  Gemini API
+API_KEY = ""  #  Gemini API key
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')  # Using Gemini 1.5 Flash for speed
+model = genai.GenerativeModel('gemini-1.5-flash')  # Using Gemini 1.5 
 
 # Ensure 'uploads' directory exists
 if not os.path.exists('uploads'):
@@ -122,8 +122,7 @@ def signup():
             conn.close()
             return jsonify({'message': 'Error saving user.'}), 500
     return render_template('signup.html')
-# No selection was provided, so I'll generate a code snippet that can be inserted at the cursor position.
-# This snippet includes some improvements to the existing code, such as adding error handling and logging.
+
 
 import logging
 
